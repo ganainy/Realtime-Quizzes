@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:realtime_quizzes/models/user.dart';
 import 'package:realtime_quizzes/screens/login/login.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:realtime_quizzes/shared/constants.dart';
 import 'package:realtime_quizzes/shared/shared.dart';
 
@@ -18,6 +19,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
+    await dotenv.load(fileName: ".env");
     await DioHelper.init();
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);

@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -46,30 +47,30 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBT4Ss1AJA-HPs1ZgMZWoGHSMzqd25nhPI',
-    appId: '1:106716720320:web:1c1ef364b41456a9829125',
-    messagingSenderId: '106716720320',
-    projectId: 'realtime-quizzes-db217',
-    authDomain: 'realtime-quizzes-db217.firebaseapp.com',
-    storageBucket: 'realtime-quizzes-db217.firebasestorage.app',
-    measurementId: 'G-X8RDEG9VH9',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_WEB_API_KEY']!,
+    appId: dotenv.env['FIREBASE_WEB_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    authDomain: dotenv.env['FIREBASE_WEB_AUTH_DOMAIN'],
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'],
+    measurementId: dotenv.env['FIREBASE_WEB_MEASUREMENT_ID'],
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDeLoz8899lfMH8ZKOp4xRhIyTPV-BEGTk',
-    appId: '1:106716720320:android:6e1e626a766490fe829125',
-    messagingSenderId: '106716720320',
-    projectId: 'realtime-quizzes-db217',
-    storageBucket: 'realtime-quizzes-db217.firebasestorage.app',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_ANDROID_API_KEY']!,
+    appId: dotenv.env['FIREBASE_ANDROID_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'],
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCLjpXKUjRwRJhyPrgxr46WffiR-coOwLU',
-    appId: '1:106716720320:ios:3fb3b750274a0f1f829125',
-    messagingSenderId: '106716720320',
-    projectId: 'realtime-quizzes-db217',
-    storageBucket: 'realtime-quizzes-db217.firebasestorage.app',
-    iosBundleId: 'com.example.realtimeQuizzes',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_IOS_API_KEY']!,
+    appId: dotenv.env['FIREBASE_IOS_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'],
+    iosBundleId: dotenv.env['FIREBASE_IOS_BUNDLE_ID'],
   );
 }

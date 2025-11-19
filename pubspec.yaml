@@ -47,6 +47,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_svg: ^2.0.10
   flutter_plugin_android_lifecycle: ^2.0.17
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
