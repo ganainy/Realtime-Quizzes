@@ -9,7 +9,7 @@ import '../../models/UserStatus.dart';
 import '../../models/download_state.dart';
 import '../../shared/shared.dart';
 
-class SearchController extends GetxController {
+class GameSearchController extends GetxController {
   var downloadStateObs = DownloadState.INITIAL.obs;
   var queryResultsObs = [].obs; //list of users
   var searchQueryObs = ''.obs; //input to search box

@@ -34,11 +34,11 @@ class ProfileScreen extends StatelessWidget {
                           height: 120.0),
                       Text(
                         '${Shared.loggedUser?.name.toUpperCase()}',
-                        style: Theme.of(context).textTheme.headline1,
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                       Text(
                         '${Shared.loggedUser?.email}',
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Container(
                         margin: EdgeInsets.all(mediumPadding),
@@ -153,17 +153,17 @@ class ProfileScreen extends StatelessWidget {
               result.isMultiPlayer!
                   ? Text(
                       'Result: ${result.type}',
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.titleMedium,
                     )
                   : const SizedBox(),
               Text('Category: ${result.category ?? 'Random'}',
-                  style: Theme.of(context).textTheme.subtitle1),
+                  style: Theme.of(context).textTheme.titleMedium),
               Text(
                 'Difficulty: ${result.difficulty ?? 'Random'}',
-                style: Theme.of(context).textTheme.subtitle1,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               Text('Date: ${formatTimeAgo(result.createdAt!)}',
-                  style: Theme.of(context).textTheme.subtitle1),
+                  style: Theme.of(context).textTheme.titleMedium),
               Container(
                 height: 40,
                 child: Row(

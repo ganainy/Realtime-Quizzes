@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:realtime_quizzes/screens/friends/friends_controller.dart';
@@ -16,10 +16,12 @@ import '../../shared/shared.dart';
 class SearchScreen extends StatelessWidget {
   SearchScreen({Key? key}) : super(key: key);
 
-  TextEditingController searchTextEditingController = TextEditingController();
+  final TextEditingController searchTextEditingController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  final SearchController searchController = Get.find<SearchController>();
+  final GameSearchController searchController =
+      Get.find<GameSearchController>();
   final FriendsController friendsController = Get.find<FriendsController>();
 
   @override
@@ -86,8 +88,7 @@ class SearchScreen extends StatelessWidget {
         SearchFormField(),
         ListView.separated(
           itemBuilder: (context, index) {
-            var currentUser =
-                searchController.queryResultsObs.value.elementAt(index);
+            var currentUser = searchController.queryResultsObs.elementAt(index);
             return SizedBox(
               child: CircleBorderContainer(
                 child: Row(
@@ -98,7 +99,7 @@ class SearchScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(smallPadding),
                         child: Text(
                           '${currentUser.name} ',
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style: Theme.of(context).textTheme.titleMedium,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -113,7 +114,7 @@ class SearchScreen extends StatelessWidget {
           separatorBuilder: (context, index) {
             return const SizedBox();
           },
-          itemCount: searchController.queryResultsObs.value.length,
+          itemCount: searchController.queryResultsObs.length,
           shrinkWrap: true,
           primary: false,
         ),
@@ -237,7 +238,7 @@ class SearchScreen extends StatelessWidget {
         Text(
           msg,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline1,
+          style: Theme.of(context).textTheme.displayLarge,
         ),
         Flexible(
           child: AspectRatio(

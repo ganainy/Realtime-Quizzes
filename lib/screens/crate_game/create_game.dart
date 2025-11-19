@@ -39,7 +39,7 @@ class CreateGameScreen extends StatelessWidget {
                           Text(
                             'Game settings',
                             textAlign: TextAlign.start,
-                            style: Theme.of(context).textTheme.headline1,
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
                           const Text(
                             'Create game and wait for opponent to join',
@@ -86,7 +86,7 @@ class CreateGameScreen extends StatelessWidget {
           children: [
             Text(
               'Category',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(
               height: smallPadding,
@@ -128,7 +128,7 @@ class CreateGameScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Question amount ',
-                  style: Theme.of(context).textTheme.subtitle1),
+                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(
                 height: 50,
               ),
@@ -174,7 +174,8 @@ class CreateGameScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Difficulty', style: Theme.of(context).textTheme.subtitle1),
+              Text('Difficulty',
+                  style: Theme.of(context).textTheme.titleMedium),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 DifficultySelector('easy'.tr),
                 DifficultySelector('medium'.tr),
@@ -224,7 +225,7 @@ class CreateGameScreen extends StatelessWidget {
           children: [
             Text(
               'Game mode',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(
               height: smallPadding,

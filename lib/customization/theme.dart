@@ -5,11 +5,11 @@ const smallPadding = 8.00;
 const mediumPadding = 16.00;
 const largePadding = 32.00;
 
-var darkBg = Color(0xFF68869A);
-var lightBg = Color(0xFFC1E2FF);
+var darkBg = const Color(0xFF68869A);
+var lightBg = const Color(0xFFC1E2FF);
 
-var darkText = Color(0xFF2C353E);
-var lightText = Color(0xFF455361);
+var darkText = const Color(0xFF2C353E);
+var lightText = const Color(0xFF455361);
 var whiteText = Colors.white;
 
 Color bgColor = Colors.white;
@@ -36,8 +36,8 @@ class MyTheme {
     ),
     fontFamily: 'IBM',
     textTheme: TextTheme(
-      headline1: TextStyle(color: darkText, fontSize: 32),
-      subtitle1: TextStyle(color: darkText, fontSize: 18),
+      displayLarge: TextStyle(color: darkText, fontSize: 32),
+      titleMedium: TextStyle(color: darkText, fontSize: 18),
     ),
   );
 
@@ -56,40 +56,3 @@ class MyTheme {
     });
   }
 }
-
-/*
-class MyTheme {
-  static var darkTheme = ThemeData(
-    primaryColor: Colors.grey,
-    textTheme: const TextTheme(
-        headline6: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.white, fontSize: 24),
-        headline5: TextStyle(
-            fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)),
-    primarySwatch: Colors.deepOrange,
-//because body color is originally offwhite so there is slight difference  between  appbar and body
-    scaffoldBackgroundColor: const Color(0xff0D1E37),
-    appBarTheme: const AppBarTheme(
-//change  color of any icon in appbar
-      iconTheme: IconThemeData(color: Colors.white),
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Color(0xff0D1E37),
-      ),
-      backgroundColor: Color(0xff0D1E37),
-//text style in appbar
-      titleTextStyle: TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-
-      elevation: 0,
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.deepOrange,
-      backgroundColor: Color(0xff0D1E37),
-      unselectedItemColor: Colors.white,
-    ),
-  );
-*/

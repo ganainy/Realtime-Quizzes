@@ -29,7 +29,7 @@ class ReceivedInviteScreen extends StatelessWidget {
                 ),
                 Text(
                   'Received invite sent, tap on any to start game',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(
                   height: 10,
@@ -45,7 +45,7 @@ class ReceivedInviteScreen extends StatelessWidget {
                           //   receivedInvitesController.acceptInvite(index);
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(smallPadding),
+                          padding: const EdgeInsets.all(smallPadding),
                           child: Card(
                             color: Colors.grey[200],
                             child: Padding(

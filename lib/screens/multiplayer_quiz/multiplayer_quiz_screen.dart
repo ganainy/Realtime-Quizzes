@@ -68,7 +68,7 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                     ),
                     Text(
                       multiPlayerQuizController.timerValueObs.value.toString(),
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color:
                               multiPlayerQuizController.timerValueObs.value <= 3
                                   ? Colors.red
@@ -99,7 +99,7 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                         child: Text(
                           '${currentQuestion?.question}',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style: Theme.of(context).textTheme.titleMedium,
                         )),
                   ),
                 ),

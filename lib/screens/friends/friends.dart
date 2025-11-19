@@ -83,7 +83,7 @@ class FriendsScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Your game is available to other players and will start automatically once opponent joins',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
             ],
@@ -101,7 +101,7 @@ class FriendsScreen extends StatelessWidget {
           margin: const EdgeInsetsDirectional.only(start: smallPadding),
           child: Text(
             'Friends',
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         const SizedBox(
@@ -112,7 +112,7 @@ class FriendsScreen extends StatelessWidget {
                 margin: const EdgeInsetsDirectional.only(start: smallPadding),
                 child: Text(
                   'No friends yet, find new friends using search screen!',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               )
             : SizedBox(
@@ -138,7 +138,7 @@ class FriendsScreen extends StatelessWidget {
                         SizedBox(height: smallPadding),
                         Text(
                           'Discover',
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style: Theme.of(context).textTheme.titleMedium,
                         )
                       ],
                     ),
@@ -167,7 +167,7 @@ class FriendsScreen extends StatelessWidget {
                                 maxLines: 2,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.subtitle1,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ),
                           ],
@@ -192,7 +192,7 @@ class FriendsScreen extends StatelessWidget {
           margin: const EdgeInsetsDirectional.only(start: smallPadding),
           child: Text(
             'Incoming Friend Requests',
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         ListView.builder(
@@ -214,7 +214,7 @@ class FriendsScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle1
+                          .titleMedium
                           ?.copyWith(color: darkText),
                     ),
                   ),
@@ -234,7 +234,7 @@ class FriendsScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1
+                                      .titleMedium
                                       ?.copyWith(color: whiteText),
                                 )),
                             color: darkBg),
@@ -253,7 +253,7 @@ class FriendsScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1
+                                      .titleMedium
                                       ?.copyWith(color: whiteText),
                                 )),
                             color: darkBg),

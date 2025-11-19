@@ -76,7 +76,7 @@ class MultiPlayerQuizController extends GetxController {
 
   //save user answer in fire store
   void registerAnswer(String answer) {
-    debugPrint('register answer: ${answer} ');
+    debugPrint('register answer: $answer ');
 
     selectedAnswerLocalObs.value = answer;
 

@@ -64,7 +64,7 @@ class ResultScreen extends StatelessWidget {
                                         '${game?.players!.elementAt(0)?.user?.name}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle1
+                                            .titleMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold)),
                                   ),
@@ -89,7 +89,7 @@ class ResultScreen extends StatelessWidget {
                                       '${game.players!.elementAt(0)?.score}',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle1
+                                          .titleMedium
                                           ?.copyWith(color: bgColor)),
                                 ),
                               ),
@@ -108,7 +108,7 @@ class ResultScreen extends StatelessWidget {
                                   '${game.players!.elementAt(1)?.user?.name}',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .subtitle1
+                                      .titleMedium
                                       ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -128,7 +128,7 @@ class ResultScreen extends StatelessWidget {
                                       '${game.players!.elementAt(1)?.score}',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle1
+                                          .titleMedium
                                           ?.copyWith(color: bgColor)),
                                 ),
                               ),
@@ -150,7 +150,7 @@ class ResultScreen extends StatelessWidget {
                         'Final Result',
                         style: Theme.of(context)
                             .textTheme
-                            .headline1
+                            .displayLarge
                             ?.copyWith(color: bgColor),
                       ),
                     ),
@@ -208,7 +208,7 @@ class ResultScreen extends StatelessWidget {
                                     child: Text('${finalScore}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline1
+                                            .displayLarge
                                             ?.copyWith(color: bgColor)),
                                   ),
                                 ),
@@ -226,7 +226,7 @@ class ResultScreen extends StatelessWidget {
                                         '${gameSettings.numberOfQuestions!.toInt() + 1}', //todo fix +1 bug
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline1
+                                            .displayLarge
                                             ?.copyWith(color: bgColor)),
                                   ),
                                 ),
@@ -247,7 +247,7 @@ class ResultScreen extends StatelessWidget {
                         'Final Result',
                         style: Theme.of(context)
                             .textTheme
-                            .headline1
+                            .displayLarge
                             ?.copyWith(color: bgColor),
                       ),
                     ),

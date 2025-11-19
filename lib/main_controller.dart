@@ -32,14 +32,14 @@ class MainController extends GetxController {
   StreamSubscription? queueEntryListener;
 
   late FriendsController friendsController;
-  late SearchController searchController;
+  late GameSearchController searchController;
   late ProfileController profileController;
 
   bool isDialogOpen = false; //flag to check if dialog is open
   @override
   void onInit() {
     friendsController = Get.put(FriendsController());
-    searchController = Get.put(SearchController());
+    searchController = Get.put(GameSearchController());
     profileController = Get.put(ProfileController());
     //set user as online on app start
     changeUserStatus(true);
@@ -97,20 +97,20 @@ class MainController extends GetxController {
     var difficultyApi;
 
     //convert category name to match the param thats passed to api
-    Constants.categoryList.forEach((categoryMap) {
+    for (var categoryMap in Constants.categoryList) {
       if (categoryMap['category'].toString().toLowerCase() ==
           Shared.game.gameSettings?.category?.toLowerCase()) {
         categoryApi = categoryMap['api'];
       }
-    });
+    }
 
     //convert difficulty name to match the param thats passed to api
-    Constants.difficultyList.forEach((difficultyMap) {
+    for (var difficultyMap in Constants.difficultyList) {
       if (difficultyMap['difficulty'].toString().toLowerCase() ==
           Shared.game.gameSettings?.difficulty?.toLowerCase()) {
         difficultyApi = difficultyMap['api'];
       }
-    });
+    }
 
     var params = {
       'difficulty': difficultyApi,
@@ -141,9 +141,9 @@ class MainController extends GetxController {
     debugPrint('uploadQuiz');
 
     var questionsJson = [];
-    questions.forEach((question) {
+    for (var question in questions) {
       questionsJson.add(questionModelToJson(question));
-    });
+    }
     //upload quiz to firestore
     return await gameCollection.doc(Shared.game.gameId).update({
       'questions': questionsJson,
@@ -408,13 +408,13 @@ class MainController extends GetxController {
     hideOldDialog();
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: const Text("Cancel"),
       onPressed: () {
         hideCurrentDialog();
       },
     );
     Widget deleteButton = TextButton(
-      child: Text("Delete friend"),
+      child: const Text("Delete friend"),
       onPressed: () {
         hideCurrentDialog();
         deleteFriend(friend);
@@ -425,7 +425,7 @@ class MainController extends GetxController {
       actions: [deleteButton, cancelButton],
       barrierDismissible: false,
       title: 'Select action for ${friend?.name ?? 'Friend'}',
-      content: Column(
+      content: const Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [],
@@ -437,7 +437,7 @@ class MainController extends GetxController {
     hideOldDialog();
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Ok"),
+      child: const Text("Ok"),
       onPressed: () {
         hideCurrentDialog();
       },
@@ -447,20 +447,20 @@ class MainController extends GetxController {
       actions: [cancelButton],
       title: title ?? '',
       barrierDismissible: false,
-      content: Text(message, style: TextStyle(fontSize: 14)),
+      content: Text(message, style: const TextStyle(fontSize: 14)),
     );
   }
 
   void confirmExitDialog({bool isOnlineGame = false}) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: const Text("Cancel"),
       onPressed: () {
         hideCurrentDialog();
       },
     );
     Widget confirmButton = TextButton(
-      child: Text("Confirm"),
+      child: const Text("Confirm"),
       onPressed: () {
         if (isOnlineGame) {
           //in case of online game, set as abandoned to notify other player he is alone
@@ -485,7 +485,7 @@ class MainController extends GetxController {
 
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: const Text("Cancel"),
       onPressed: () {
         hideCurrentDialog();
       },
@@ -495,7 +495,7 @@ class MainController extends GetxController {
       actions: [cancelButton],
       title: 'Opponent joined',
       barrierDismissible: false,
-      content: Column(
+      content: const Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -514,7 +514,7 @@ class MainController extends GetxController {
 
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: const Text("Cancel"),
       onPressed: () {
         onCancel();
         hideCurrentDialog();
@@ -525,10 +525,10 @@ class MainController extends GetxController {
       actions: [cancelButton],
       title: loadingMessage,
       barrierDismissible: false,
-      content: Column(
+      content: const Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children: [
           CircularProgressIndicator(),
         ],
       ),
@@ -541,7 +541,7 @@ class MainController extends GetxController {
 
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("Ok"),
+      child: const Text("Ok"),
       onPressed: () {
         hideCurrentDialog();
       },
@@ -551,7 +551,7 @@ class MainController extends GetxController {
       actions: [cancelButton],
       title: 'Error',
       barrierDismissible: false,
-      content: Text('${errorMessage}', style: const TextStyle(fontSize: 14)),
+      content: Text('$errorMessage', style: const TextStyle(fontSize: 14)),
     );
   }
 

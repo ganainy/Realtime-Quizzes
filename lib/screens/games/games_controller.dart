@@ -33,7 +33,7 @@ class GamesController extends GetxController {
 
       var tempAvailableGames = [];
 
-      event.docs.forEach((gameJson) {
+      for (var gameJson in event.docs) {
         var game = GameModel.fromJson(gameJson.data());
 
         // dont show the game that is created by the logged user
@@ -46,7 +46,7 @@ class GamesController extends GetxController {
             availableGamesObs.refresh();
           }
         }
-      });
+      }
 
       if (tempAvailableGames.length < availableGamesObs.value.length) {
         //this means a game was removed
@@ -62,7 +62,7 @@ class GamesController extends GetxController {
       //set friends games
       friendsGamesObs.value.clear();
       friendsGamesObs.refresh();
-      availableGamesObs.value.forEach((availableGame) {
+      for (var availableGame in availableGamesObs.value) {
         if (Shared.loggedUser!.connections.map((connection) {
           return connection?.email;
         }).contains(availableGame.gameId)) {
@@ -76,7 +76,7 @@ class GamesController extends GetxController {
           //there is only one game and its created by logged user so dont show
           downloadStateObs.value = DownloadState.EMPTY;
         }
-      });
+      }
     }).onError((error, stackTrace) {
       mainController.errorDialog('Error loading games: ' + error.toString());
       printError(
@@ -87,11 +87,11 @@ class GamesController extends GetxController {
   //checks if game is already downloaded
   bool isShowedGame(GameModel newGame) {
     bool isShowed = false;
-    availableGamesObs.value.forEach((game) {
+    for (var game in availableGamesObs.value) {
       if (newGame.gameId == game.gameId) {
         isShowed = true;
       }
-    });
+    }
     return isShowed;
   }
 }

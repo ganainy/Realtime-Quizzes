@@ -22,6 +22,6 @@ class HomeController extends GetxController {
   void navigateBottomsheet(int index) {
     bottomSelectedIndex.value = index;
     pageController.animateToPage(index,
-        duration: Duration(milliseconds: 500), curve: Curves.ease);
+        duration: const Duration(milliseconds: 500), curve: Curves.ease);
   }
 }

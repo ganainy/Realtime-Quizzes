@@ -95,14 +95,11 @@ class RegisterController extends GetxController {
       }
     } catch (error) {
       mainController.errorDialog(error.toString());
-
-      debugPrint(error.toString());
-      downloadState.value = DownloadState.INITIAL;
     }
   }
 
   getImageFromGallery() async {
-    PickedFile? pickedFile = await ImagePicker().getImage(
+    final XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxWidth: 1800,
       maxHeight: 1800,

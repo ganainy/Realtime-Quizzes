@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:realtime_quizzes/customization/theme.dart';
 import 'package:realtime_quizzes/layouts/home/home.dart';
 import 'package:realtime_quizzes/models/game_type.dart';

@@ -80,26 +80,30 @@ class GamesScreen extends StatelessWidget {
         children: [
           Text(
             'Friends games',
-            style:
-                Theme.of(context).textTheme.headline1?.copyWith(fontSize: 24),
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge
+                ?.copyWith(fontSize: 24),
           ),
           gamesController.friendsGamesObs.value.isEmpty
               ? Text(
                   'No Friends games available',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.titleMedium,
                 )
               : AvailableGamesList(
                   context: context,
                   gamesList: gamesController.friendsGamesObs.value),
           Text(
             'Other games',
-            style:
-                Theme.of(context).textTheme.headline1?.copyWith(fontSize: 24),
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge
+                ?.copyWith(fontSize: 24),
           ),
           gamesController.availableGamesObs.value.isEmpty
               ? Text(
                   'No Other games available',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.titleMedium,
                 )
               : AvailableGamesList(
                   context: context,
@@ -153,22 +157,9 @@ class GamesScreen extends StatelessWidget {
                   const SizedBox(
                     width: smallPadding,
                   ),
-                  Expanded(
-                    child: Text(
-                      '${availableGameCreator?.name}',
-                      style: Theme.of(context).textTheme.headline1?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: smallPadding,
-                  ),
                   Text(
                     '${formatTimeAgo(availableGame?.gameSettings?.createdAt)}',
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: lightText,
                           fontSize: 14,
                         ),
@@ -204,7 +195,7 @@ class GamesScreen extends StatelessWidget {
       child: Center(
         child: Text(
           'No games available',
-          style: Theme.of(context).textTheme.headline1,
+          style: Theme.of(context).textTheme.displayLarge,
         ),
       ),
     );
@@ -214,7 +205,7 @@ class GamesScreen extends StatelessWidget {
     return Center(
       child: Text(
         'Something went wrong.',
-        style: Theme.of(context).textTheme.headline1,
+        style: Theme.of(context).textTheme.displayLarge,
       ),
     );
   }

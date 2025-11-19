@@ -51,7 +51,7 @@ class ResultController extends GetxController {
     });
 
     //calculate type of game
-    var _type;
+    String _type;
     if (_loggedPlayer!.score > _otherPlayer!.score) {
       _type = 'win';
     } else if (_loggedPlayer!.score < _otherPlayer!.score) {

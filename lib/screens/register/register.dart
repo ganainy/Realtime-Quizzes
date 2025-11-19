@@ -39,14 +39,14 @@ class RegisterScreen extends StatelessWidget {
                         textAlign: TextAlign.start,
                         style: Theme.of(context)
                             .textTheme
-                            .headline6
+                            .titleLarge
                             ?.copyWith(fontSize: 32),
                       ),
                       Text(
                         'Register to challenge friends and view your statistics ',
                         style: Theme.of(context)
                             .textTheme
-                            .bodyText1
+                            .bodyLarge
                             ?.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(
@@ -156,7 +156,7 @@ class RegisterScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Already have an account? ',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextButton(
                             onPressed: () {

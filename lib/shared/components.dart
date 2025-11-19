@@ -70,7 +70,7 @@ DefaultButton({
                 ),
               ),
         style: TextButton.styleFrom(
-          primary: darkText,
+          foregroundColor: darkText,
           backgroundColor: darkBg,
           textStyle: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -108,7 +108,7 @@ DefaultIconButton({
         ],
       ),
       style: TextButton.styleFrom(
-        primary: lightBg,
+        foregroundColor: lightBg,
         backgroundColor: darkBg,
       ),
     ),
@@ -156,13 +156,13 @@ MultiPlayerAnswerButton({
           ),
           Text(
             text,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ],
       ),
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
-        primary: Colors.white,
+        foregroundColor: Colors.white,
       ),
     ),
   );
@@ -195,11 +195,11 @@ SinglePlayerAnswerButton({
       onPressed: onPressed,
       child: Text(
         text,
-        style: Theme.of(context).textTheme.subtitle1,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
-        primary: Colors.white,
+        foregroundColor: Colors.white,
       ),
     ),
   );

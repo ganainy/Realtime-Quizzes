@@ -76,12 +76,12 @@ class FriendsController extends GetxController {
         .firstWhereOrNull((friend) => friend.email == friendUpdated.email));
 
     bool isNotDeletedConnection = false;
-    Shared.loggedUser!.connections.forEach((connection) {
+    for (var connection in Shared.loggedUser!.connections) {
       if (connection?.email == friendUpdated.email &&
           connection?.userStatus == UserStatus.FRIEND) {
         isNotDeletedConnection = true;
       }
-    });
+    }
 
     if (!isNotDeletedConnection) {
       return; //if friend is already deleted, dont add or update

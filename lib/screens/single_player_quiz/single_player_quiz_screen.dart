@@ -86,7 +86,7 @@ class SinglePlayerQuizScreen extends StatelessWidget {
                 Obx(() {
                   return Text(
                     singlePlayerQuizController.timerCounter.value.toString(),
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color:
                             singlePlayerQuizController.timerCounter.value! <= 3
                                 ? Colors.red
@@ -110,7 +110,7 @@ class SinglePlayerQuizScreen extends StatelessWidget {
                         child: Text(
                           '${currentQuestion?.question}',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style: Theme.of(context).textTheme.titleMedium,
                         )),
                   ),
                 ),

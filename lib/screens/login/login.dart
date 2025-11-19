@@ -29,24 +29,20 @@ class LoginScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'LOGIN ',
                         style: Theme.of(context)
                             .textTheme
-                            .headline6
+                            .titleLarge
                             ?.copyWith(fontSize: 32),
                       ),
                       Text(
                         'Login to access your challenges and statistics ',
                         style: Theme.of(context)
                             .textTheme
-                            .bodyText1
+                            .bodyLarge
                             ?.copyWith(color: Colors.grey),
-                      ),
-                      const SizedBox(
-                        height: 16,
                       ),
                       const SizedBox(
                         height: 16,
@@ -112,7 +108,7 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Don\'t have an account? ',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           TextButton(
                             onPressed: () {

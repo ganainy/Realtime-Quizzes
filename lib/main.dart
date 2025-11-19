@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final MainController mainController = Get.find<MainController>();
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quiz',
-      locale: Locale('en', 'US'),
+      locale: const Locale('en', 'US'),
       translationsKeys: Constants.translation,
       theme: MyTheme.lighTheme,
       home: startWidget,
