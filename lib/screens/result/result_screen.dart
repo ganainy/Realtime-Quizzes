@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:realtime_quizzes/layouts/home/home.dart';
 import 'package:realtime_quizzes/main_controller.dart';
 import 'package:realtime_quizzes/models/quiz_settings.dart';
@@ -223,7 +222,7 @@ class ResultScreen extends StatelessWidget {
                                         horizontal: largePadding,
                                         vertical: smallPadding),
                                     child: Text(
-                                        '${gameSettings.numberOfQuestions!.toInt() + 1}', //todo fix +1 bug
+                                        '${gameSettings.numberOfQuestions!.toInt()}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .displayLarge

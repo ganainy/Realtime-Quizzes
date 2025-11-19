@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:realtime_quizzes/models/game.dart';
 import 'package:realtime_quizzes/models/game_type.dart';
 import 'package:realtime_quizzes/models/player.dart';
@@ -88,7 +87,7 @@ class ResultController extends GetxController {
     //create result model
     ResultModel _resultModel = ResultModel(
       score: finalScore,
-      maxScore: gameSettings.numberOfQuestions!.toInt() + 1, //todo fix +1 bug
+      maxScore: gameSettings.numberOfQuestions!.toInt(),
       difficulty: gameSettings.difficulty,
       category: gameSettings.category,
       createdAt: gameSettings.createdAt,

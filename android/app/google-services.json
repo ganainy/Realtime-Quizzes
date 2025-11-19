@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "538582149911",
-    "project_id": "realtime-quizzes",
-    "storage_bucket": "realtime-quizzes.appspot.com"
+    "project_number": "106716720320",
+    "project_id": "realtime-quizzes-db217",
+    "storage_bucket": "realtime-quizzes-db217.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:538582149911:android:a57072f8b9002cf633a552",
+        "mobilesdk_app_id": "1:106716720320:android:6e1e626a766490fe829125",
         "android_client_info": {
           "package_name": "com.example.realtime_quizzes"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "538582149911-sb36soh8mfc05mhgohu2749vpmk8dmq6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.realtime_quizzes",
-            "certificate_hash": "9d84650996ab09d9f7444777d38ea62346993874"
-          }
-        },
-        {
-          "client_id": "538582149911-k12s4he72f1c5ja3ug55si4pe7rhhos7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAtdMTPJep6Liy2GFSVY07b0RYGEw2GGP4"
+          "current_key": "AIzaSyDeLoz8899lfMH8ZKOp4xRhIyTPV-BEGTk"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "538582149911-k12s4he72f1c5ja3ug55si4pe7rhhos7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

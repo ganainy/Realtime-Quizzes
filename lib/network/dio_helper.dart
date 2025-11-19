@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/io.dart';
 import 'package:dio/dio.dart';
 
 class DioHelper {
@@ -12,15 +9,9 @@ class DioHelper {
       receiveDataWhenStatusError: true,
     ));
 
-    //to fix HandshakeException
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        final client = HttpClient();
-        client.badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true;
-        return client;
-      },
-    );
+    // Note: If you encounter SSL certificate errors with opentdb.com,
+    // the proper solution is to ensure the API has valid certificates
+    // or use a different API endpoint, not to bypass certificate validation
   }
 
   static Future<Response> getQuestions({

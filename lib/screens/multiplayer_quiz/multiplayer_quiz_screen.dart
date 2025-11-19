@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:realtime_quizzes/customization/theme.dart';
 import 'package:realtime_quizzes/main_controller.dart';
 import 'package:realtime_quizzes/screens/multiplayer_quiz/multiplayer_quiz_controller.dart';
@@ -17,10 +15,12 @@ class MultiPlayerQuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        mainController.confirmExitDialog(isOnlineGame: true);
-        return Future.value(false);
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (!didPop) {
+          mainController.confirmExitDialog(isOnlineGame: true);
+        }
       },
       child: SafeArea(child: Scaffold(
         body: Obx(() {
@@ -147,10 +147,5 @@ class MultiPlayerQuizScreen extends StatelessWidget {
           }
         },
         multiPlayerQuizController: multiPlayerQuizController);
-  }
-
-  @override
-  Ticker createTicker(TickerCallback onTick) {
-    throw UnimplementedError();
   }
 }

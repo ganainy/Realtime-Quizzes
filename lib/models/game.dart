@@ -72,7 +72,7 @@ gameModelToJson(GameModel? gameModel) {
     questionsList.add(questionModelToJson(question));
   });
 
-  String gameStatus;
+  String? gameStatus;
 
   switch (gameModel?.gameStatus) {
     case GameStatus.INVITE_ACCEPTED:

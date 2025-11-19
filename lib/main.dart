@@ -1,13 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:realtime_quizzes/screens/register/register.dart';
 import 'package:realtime_quizzes/shared/constants.dart';
 import 'package:realtime_quizzes/shared/shared.dart';
 
 import 'customization/theme.dart';
+import 'firebase_options.dart';
 import 'layouts/home/home.dart';
 import 'main_controller.dart';
 import 'network/dio_helper.dart';
@@ -15,7 +14,7 @@ import 'network/dio_helper.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DioHelper.init();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Get.put(MainController());
   late Widget startWidget;
 
@@ -30,18 +29,15 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
-  Widget startWidget;
+  final Widget startWidget;
 
-  MyApp(this.startWidget, {Key? key}) : super(key: key);
+  const MyApp(this.startWidget, {Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState(startWidget);
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  Widget startWidget;
-  _MyAppState(this.startWidget);
-
   final MainController mainController = Get.find<MainController>();
   @override
   void initState() {
@@ -55,7 +51,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       mainController.changeUserStatus(true);
       debugPrint('user online ');
     } else {
-      debugPrint('user offline  ' + state.toString());
+      debugPrint('user offline  ${state.toString()}');
       mainController.changeUserStatus(false);
     }
   }
@@ -68,7 +64,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       locale: const Locale('en', 'US'),
       translationsKeys: Constants.translation,
       theme: MyTheme.lighTheme,
-      home: startWidget,
+      home: widget.startWidget,
     );
   }
 }

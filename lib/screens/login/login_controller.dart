@@ -26,35 +26,38 @@ class LoginController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  login({
+  Future<void> login({
     required String email,
     required String password,
-  }) {
+  }) async {
     downloadState.value = DownloadState.LOADING;
 
     try {
-      FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        //user logged successfully, save user to info to db
-        Shared.loggedUser = UserModel(email: auth.currentUser?.email);
-        debugPrint('Login email : ${auth.currentUser?.email}');
-        Get.off(() => HomeScreen());
-      }).onError((error, stackTrace) {
-        debugPrint('Login error : ' + error.toString());
-        mainController.errorDialog(error.toString());
-        downloadState.value = DownloadState.INITIAL;
-      });
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      //user logged successfully, save user info
+      Shared.loggedUser = UserModel(email: auth.currentUser?.email);
+      debugPrint('Login email : ${auth.currentUser?.email}');
+      Get.off(() => HomeScreen());
     } on FirebaseAuthException catch (e) {
+      downloadState.value = DownloadState.INITIAL;
+
       if (e.code == 'user-not-found') {
         debugPrint('No user found for that email.');
         mainController.errorDialog('No user found for that email.');
-        downloadState.value = DownloadState.INITIAL;
       } else if (e.code == 'wrong-password') {
         debugPrint('Wrong password provided for that user.');
         mainController.errorDialog('Wrong password provided for that user.');
-        downloadState.value = DownloadState.INITIAL;
+      } else {
+        debugPrint('Login error: ${e.message}');
+        mainController
+            .errorDialog(e.message ?? 'An error occurred during login.');
       }
+    } catch (error) {
+      downloadState.value = DownloadState.INITIAL;
+      debugPrint('Login error: $error');
+      mainController.errorDialog(error.toString());
     }
   }
 }

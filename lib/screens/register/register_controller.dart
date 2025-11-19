@@ -32,68 +32,50 @@ class RegisterController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  register({
+  Future<void> register({
     required String name,
     required String email,
     required String password,
     String? imageUrl,
-  }) {
+  }) async {
     downloadState.value = DownloadState.LOADING;
+
     try {
-      FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        //user created successfully, save user to info to db
-        saveUserToFirestore(name, email).then((value) {
-          Shared.loggedUser = UserModel(email: auth.currentUser?.email);
-          if (pickedImageObs.value == null) {
-            downloadState.value = DownloadState.SUCCESS;
-            Get.to(() => HomeScreen());
-          } else {
-            uploadImage(email).then((value) {
-              getImageDownloadURL(value).then((value) {
-                updateUserImageUrl(email, value).then((value) {
-                  downloadState.value = DownloadState.SUCCESS;
-                  Get.to(() => HomeScreen());
-                }).onError((error, stackTrace) {
-                  debugPrint('updateUserImageUrl error : ' + error.toString());
-                  mainController.errorDialog(error.toString());
-                  downloadState.value = DownloadState.INITIAL;
-                });
-              }).onError((error, stackTrace) {
-                debugPrint('getImageDownloadURL error : ' + error.toString());
-                mainController.errorDialog(error.toString());
-                downloadState.value = DownloadState.INITIAL;
-              });
-            }).onError((error, stackTrace) {
-              debugPrint('uploadImage error : ' + error.toString());
-              mainController.errorDialog(error.toString());
-              downloadState.value = DownloadState.INITIAL;
-            });
-          }
-        }).onError((error, stackTrace) {
-          debugPrint('saveUserToFirestore error : ' + error.toString());
-          mainController.errorDialog(error.toString());
-          downloadState.value = DownloadState.INITIAL;
-        });
-      }).onError((error, stackTrace) {
-        debugPrint(
-            'createUserWithEmailAndPassword error : ' + error.toString());
-        mainController.errorDialog(error.toString());
-        downloadState.value = DownloadState.INITIAL;
-      });
+      // Create user with email and password
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // User created successfully, save user info to Firestore
+      await saveUserToFirestore(name, email);
+      Shared.loggedUser = UserModel(email: auth.currentUser?.email);
+
+      // Upload image if selected
+      if (pickedImageObs.value != null) {
+        final imageSnapshot = await uploadImage(email);
+        final downloadUrl = await getImageDownloadURL(imageSnapshot);
+        await updateUserImageUrl(email, downloadUrl);
+      }
+
+      downloadState.value = DownloadState.SUCCESS;
+      Get.to(() => HomeScreen());
     } on FirebaseAuthException catch (e) {
+      downloadState.value = DownloadState.INITIAL;
+
       if (e.code == 'weak-password') {
         debugPrint('The password provided is too weak.');
         mainController.errorDialog('The password provided is too weak.');
-        downloadState.value = DownloadState.INITIAL;
       } else if (e.code == 'email-already-in-use') {
         debugPrint('The account already exists for that email.');
         mainController
             .errorDialog('The account already exists for that email.');
-        downloadState.value = DownloadState.INITIAL;
+      } else {
+        debugPrint('Registration error: ${e.message}');
+        mainController
+            .errorDialog(e.message ?? 'An error occurred during registration.');
       }
     } catch (error) {
+      downloadState.value = DownloadState.INITIAL;
+      debugPrint('Registration error: $error');
       mainController.errorDialog(error.toString());
     }
   }
