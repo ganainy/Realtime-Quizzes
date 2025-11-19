@@ -97,13 +97,13 @@ class GameSearchController extends GetxController {
       Exception("User status is null");
     } else if (status == UserStatus.FRIEND) {
       mainController.errorDialog(
-        'User is already your friend',
+        'user_already_friend'.tr,
       );
     } else if (status == UserStatus.RECEIVED_FRIEND_REQUEST) {
       mainController.acceptFriendRequest(user);
     } else if (status == UserStatus.SENT_FRIEND_REQUEST) {
       mainController.errorDialog(
-        'You already sent friend request to this user',
+        'friend_request_sent_already'.tr,
       );
     } else if (status == UserStatus.NOT_FRIEND ||
         status == UserStatus.REMOVED_REQUEST) {

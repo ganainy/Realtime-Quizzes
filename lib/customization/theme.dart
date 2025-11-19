@@ -5,16 +5,47 @@ const smallPadding = 8.00;
 const mediumPadding = 16.00;
 const largePadding = 32.00;
 
-// Modern color palette using HSL-based colors for better harmony
-var darkBg = const Color(0xFF68869A);
-var lightBg = const Color(0xFFC1E2FF);
+// Modern color palette - Vibrant Indigo Theme
+const Color primaryColor = Color(0xFF4F46E5); // Vibrant Indigo
+const Color primaryHoverColor = Color(0xFF4338CA); // Darker Indigo for hover
 
-var darkText = const Color(0xFF2C353E);
-var lightText = const Color(0xFF455361);
+// Accent color for authentication screens
+const Color accentGreen = Color(0xFF34D399); // Vibrant Green
+
+// Quiz theme colors
+const Color quizPrimary = Color(0xFFFFD600); // Vibrant Yellow
+const Color quizBackgroundDark = Color(0xFF1A237E); // Deep Blue
+const Color quizSurfaceDark = Color(0xFF283593); // Medium Blue
+const Color quizCorrect = Color(0xFF00C853); // Bright Green
+const Color quizIncorrect = Color(0xFFD50000); // Bright Red
+
+// Friends screen theme
+const Color friendsBlue = Color(0xFF3B82F6); // Vibrant Blue
+
+// Light theme colors
+const Color backgroundLight = Color(0xFFF3F4F6); // Light Gray
+const Color surfaceLight = Color(0xFFFFFFFF); // White
+const Color primaryTextLight = Color(0xFF1F2937); // Dark Gray
+const Color secondaryTextLight = Color(0xFF6B7280); // Medium Gray
+const Color borderLight = Color(0xFFE5E7EB); // Border Light
+
+// Dark theme colors
+const Color backgroundDark = Color(0xFF111827); // Very Dark Blue/Gray
+const Color surfaceDark = Color(0xFF1F2937); // Dark Gray
+const Color primaryTextDark = Color(0xFFF9FAFB); // Off-white
+const Color secondaryTextDark = Color(0xFF9CA3AF); // Light Gray
+const Color borderDark = Color(0xFF374151); // Border Dark
+
+// Legacy color support (for backward compatibility)
+var darkBg = primaryColor;
+var lightBg = const Color(0xFFE0E7FF); // Light Indigo
+
+var darkText = primaryTextLight;
+var lightText = secondaryTextLight;
 var whiteText = Colors.white;
 
-Color bgColor = Colors.white;
-Color darkBgColor = const Color(0xFF1A1C1E);
+Color bgColor = backgroundLight;
+Color darkBgColor = backgroundDark;
 
 const cardWidth = 160.00;
 
@@ -23,32 +54,36 @@ class MyTheme {
   static var lighTheme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFF2C353E),
+      seedColor: primaryColor,
       brightness: Brightness.light,
-      primary: const Color(0xFF2C353E),
-      secondary: const Color(0xFF68869A),
-      tertiary: const Color(0xFFC1E2FF),
-      surface: Colors.white,
+      primary: primaryColor,
+      secondary: const Color(0xFF818CF8),
+      tertiary: const Color(0xFFC7D2FE),
+      surface: surfaceLight,
       error: const Color(0xFFBA1A1A),
     ),
-    scaffoldBackgroundColor: bgColor,
+    scaffoldBackgroundColor: backgroundLight,
     appBarTheme: AppBarTheme(
-      iconTheme: IconThemeData(color: darkText),
-      backgroundColor: bgColor,
+      iconTheme: const IconThemeData(color: primaryTextLight),
+      backgroundColor: backgroundLight,
       elevation: 0,
-      titleTextStyle:
-          TextStyle(color: darkText, fontSize: 40, fontFamily: 'Plex'),
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: bgColor,
+      titleTextStyle: const TextStyle(
+          color: primaryTextLight, fontSize: 40, fontFamily: 'Poppins'),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: backgroundLight,
         statusBarIconBrightness: Brightness.dark,
       ),
     ),
-    fontFamily: 'IBM',
-    textTheme: TextTheme(
-      displayLarge:
-          TextStyle(color: darkText, fontSize: 32, fontWeight: FontWeight.bold),
-      titleMedium: TextStyle(color: darkText, fontSize: 18),
-      bodyMedium: TextStyle(color: lightText, fontSize: 14),
+    fontFamily: 'Poppins',
+    textTheme: const TextTheme(
+      displayLarge: TextStyle(
+          color: primaryTextLight, fontSize: 30, fontWeight: FontWeight.bold),
+      titleLarge: TextStyle(
+          color: primaryTextLight, fontSize: 18, fontWeight: FontWeight.w600),
+      titleMedium: TextStyle(
+          color: primaryTextLight, fontSize: 18, fontWeight: FontWeight.w500),
+      bodyMedium: TextStyle(color: secondaryTextLight, fontSize: 14),
+      bodySmall: TextStyle(color: secondaryTextLight, fontSize: 13),
     ),
     cardTheme: const CardThemeData(
       elevation: 2,
@@ -67,38 +102,42 @@ class MyTheme {
   static var darkTheme = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFF2C353E),
+      seedColor: primaryColor,
       brightness: Brightness.dark,
-      primary: const Color(0xFFC1E2FF),
-      secondary: const Color(0xFF68869A),
-      tertiary: const Color(0xFF2C353E),
-      surface: const Color(0xFF1A1C1E),
+      primary: primaryColor,
+      secondary: const Color(0xFF818CF8),
+      tertiary: const Color(0xFF6366F1),
+      surface: surfaceDark,
       error: const Color(0xFFFFB4AB),
     ),
-    scaffoldBackgroundColor: darkBgColor,
+    scaffoldBackgroundColor: backgroundDark,
     appBarTheme: AppBarTheme(
-      iconTheme: const IconThemeData(color: Color(0xFFC1E2FF)),
-      backgroundColor: darkBgColor,
+      iconTheme: const IconThemeData(color: primaryTextDark),
+      backgroundColor: backgroundDark,
       elevation: 0,
       titleTextStyle: const TextStyle(
-          color: Color(0xFFC1E2FF), fontSize: 40, fontFamily: 'Plex'),
+          color: primaryTextDark, fontSize: 40, fontFamily: 'Poppins'),
       systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF1A1C1E),
+        statusBarColor: backgroundDark,
         statusBarIconBrightness: Brightness.light,
       ),
     ),
-    fontFamily: 'IBM',
+    fontFamily: 'Poppins',
     textTheme: const TextTheme(
       displayLarge: TextStyle(
-          color: Color(0xFFC1E2FF), fontSize: 32, fontWeight: FontWeight.bold),
-      titleMedium: TextStyle(color: Color(0xFFE1E3E5), fontSize: 18),
-      bodyMedium: TextStyle(color: Color(0xFFC4C6C8), fontSize: 14),
+          color: primaryTextDark, fontSize: 30, fontWeight: FontWeight.bold),
+      titleLarge: TextStyle(
+          color: primaryTextDark, fontSize: 18, fontWeight: FontWeight.w600),
+      titleMedium: TextStyle(
+          color: primaryTextDark, fontSize: 18, fontWeight: FontWeight.w500),
+      bodyMedium: TextStyle(color: secondaryTextDark, fontSize: 14),
+      bodySmall: TextStyle(color: secondaryTextDark, fontSize: 13),
     ),
     cardTheme: const CardThemeData(
-      elevation: 2,
+      elevation: 1,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(12))),
-      color: Color(0xFF2A2C2E),
+      color: surfaceDark,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(

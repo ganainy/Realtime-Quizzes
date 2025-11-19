@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:realtime_quizzes/screens/friends/friends_controller.dart';
 import 'package:realtime_quizzes/screens/search/search_controller.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,6 +10,7 @@ import '../../models/UserStatus.dart';
 import '../../models/download_state.dart';
 import '../../models/user.dart';
 import '../../shared/components.dart';
+import '../../shared/modern_ui.dart';
 import '../../shared/shared.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -26,23 +26,30 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Obx(() {
-        return Scaffold(
-          body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: searchController.downloadStateObs.value ==
-                      DownloadState.LOADING
-                  ? ShimmerLoadingView(context)
-                  : searchController.downloadStateObs.value ==
-                          DownloadState.INITIAL
-                      ? InitialView(
-                          context, 'Find a user by his name or email address')
-                      : searchController.downloadStateObs.value ==
-                              DownloadState.EMPTY
-                          ? InitialView(context, 'No matches found')
-                          : ResultsView(),
+    return ModernScaffold(
+      body: Obx(() {
+        return Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ModernHeader(
+                  title: 'search'.tr,
+                  subtitle: 'find_friends_and_players'.tr,
+                ),
+                const SizedBox(height: 24),
+                searchController.downloadStateObs.value == DownloadState.LOADING
+                    ? _buildShimmerLoadingView(context)
+                    : searchController.downloadStateObs.value ==
+                            DownloadState.INITIAL
+                        ? _buildInitialView(context, 'find_user_message'.tr)
+                        : searchController.downloadStateObs.value ==
+                                DownloadState.EMPTY
+                            ? _buildInitialView(context, 'no_matches_found'.tr)
+                            : _buildResultsView(),
+              ],
             ),
           ),
         );
@@ -50,28 +57,31 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  SearchFormField() {
-    return DefaultFormField(
-        keyboardType: TextInputType.emailAddress,
-        labelText: 'Search',
-        controller: searchTextEditingController,
-        onFieldSubmitted: (_) {
-          search();
+  Widget _buildSearchField() {
+    return ModernTextField(
+      hintText: 'search_by_name_or_email'.tr,
+      controller: searchTextEditingController,
+      keyboardType: TextInputType.emailAddress,
+      prefixIcon: const Icon(Icons.search),
+      suffixIcon: IconButton(
+        onPressed: () {
+          _search();
         },
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter some query';
-          }
-          return null;
-        },
-        suffixIcon: IconButton(
-            onPressed: () {
-              search();
-            },
-            icon: const Icon(Icons.search)));
+        icon: const Icon(Icons.arrow_forward),
+      ),
+      onSubmitted: (_) {
+        _search();
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'enter_query'.tr;
+        }
+        return null;
+      },
+    );
   }
 
-  void search() {
+  void _search() {
     if (_formKey.currentState!.validate()) {
       searchController.searchQueryObs.value =
           searchTextEditingController.value.text;
@@ -79,40 +89,18 @@ class SearchScreen extends StatelessWidget {
     }
   }
 
-  ResultsView() {
+  Widget _buildResultsView() {
     return Column(
       children: [
-        const SizedBox(
-          height: smallPadding,
-        ),
-        SearchFormField(),
+        _buildSearchField(),
+        const SizedBox(height: 24),
         ListView.separated(
           itemBuilder: (context, index) {
             var currentUser = searchController.queryResultsObs.elementAt(index);
-            return SizedBox(
-              child: CircleBorderContainer(
-                child: Row(
-                  children: [
-                    DefaultCircularNetworkImage(imageUrl: currentUser.imageUrl),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(smallPadding),
-                        child: Text(
-                          '${currentUser.name} ',
-                          style: Theme.of(context).textTheme.titleMedium,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    InteractButton(currentUser: currentUser),
-                  ],
-                ),
-              ),
-            );
+            return _buildUserResultItem(context, currentUser);
           },
           separatorBuilder: (context, index) {
-            return const SizedBox();
+            return const SizedBox(height: 12);
           },
           itemCount: searchController.queryResultsObs.length,
           shrinkWrap: true,
@@ -122,10 +110,53 @@ class SearchScreen extends StatelessWidget {
     );
   }
 
-  //this button text changes based on the current result's connection to logged user
-  InteractButton({UserModel? currentUser}) {
-    var text;
+  Widget _buildUserResultItem(BuildContext context, UserModel currentUser) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    return ModernContentCard(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          DefaultCircularNetworkImage(
+            imageUrl: currentUser.imageUrl,
+            width: 50,
+            height: 50,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  currentUser.name,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? primaryTextDark : primaryTextLight,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  currentUser.email ?? '',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isDark ? secondaryTextDark : secondaryTextLight,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          _buildInteractButton(currentUser),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInteractButton(UserModel? currentUser) {
+    var text;
     var connection = Shared.loggedUser?.connections.firstWhereOrNull(
         (connection) => connection?.email == currentUser?.email);
 
@@ -138,119 +169,139 @@ class SearchScreen extends StatelessWidget {
 
     switch (status) {
       case UserStatus.NOT_FRIEND:
-        text = 'Add';
+        text = 'add'.tr;
         break;
       case UserStatus.FRIEND:
-        text = 'Friend';
+        text = 'friend'.tr;
         break;
       case UserStatus.SENT_FRIEND_REQUEST:
-        text = 'Sent request';
+        text = 'sent'.tr;
         break;
       case UserStatus.RECEIVED_FRIEND_REQUEST:
-        text = 'Accept request';
+        text = 'accept'.tr;
         break;
       case UserStatus.REMOVED_REQUEST:
-        text = 'Add';
+        text = 'add'.tr;
         break;
       default:
-        Exception('Unknown status');
+        text = 'add'.tr;
         break;
     }
 
-    return Container(
-      constraints: BoxConstraints(maxWidth: 100),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(smallPadding),
-        color: darkBg,
-      ),
-      child: TextButton(
-        child: Text(
-          '${text}',
-          textAlign: TextAlign.center,
-        ),
+    final isActionable = status == UserStatus.NOT_FRIEND ||
+        status == UserStatus.RECEIVED_FRIEND_REQUEST ||
+        status == UserStatus.REMOVED_REQUEST;
+
+    return SizedBox(
+      height: 36,
+      child: ElevatedButton(
         onPressed: () {
           searchController.interactWithUser(currentUser, status);
         },
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+              isActionable ? primaryColor : Colors.grey.withOpacity(0.2),
+          foregroundColor: isActionable ? Colors.white : Colors.grey,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
       ),
     );
   }
 
-  ShimmerLoadingView(BuildContext context) {
+  Widget _buildShimmerLoadingView(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.white10 : Colors.grey.shade300;
+    final highlightColor = isDark ? Colors.white24 : Colors.grey.shade100;
+
     return Column(
       children: [
-        const SizedBox(
-          height: smallPadding,
-        ),
-        SearchFormField(),
+        _buildSearchField(),
+        const SizedBox(height: 24),
         ListView.separated(
           primary: false,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return SizedBox(
-              child: CircleBorderContainer(
-                child: Row(
-                  children: [
-                    ShimmerWrapper(
-                        child: DefaultCircularNetworkImage(imageUrl: '')),
-                    Expanded(
-                      child: ShimmerWrapper(
-                          child: SizedBox(
-                        child: Text('Loading...'),
-                      )),
+            return ModernContentCard(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: baseColor,
+                    highlightColor: highlightColor,
+                    child: const CircleAvatar(radius: 25),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: baseColor,
+                          highlightColor: highlightColor,
+                          child: Container(
+                            height: 16,
+                            width: 120,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Shimmer.fromColors(
+                          baseColor: baseColor,
+                          highlightColor: highlightColor,
+                          child: Container(
+                            height: 12,
+                            width: 180,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                    ShimmerWrapper(child: InteractButton()),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           },
           separatorBuilder: (context, index) {
-            return const SizedBox();
+            return const SizedBox(height: 12);
           },
-          itemCount: 1,
+          itemCount: 3,
         ),
       ],
     );
   }
 
-  ShimmerWrapper({required child}) {
-    return SizedBox(
-      child: Shimmer.fromColors(
-        baseColor: darkBg,
-        highlightColor: darkBg,
-        child: child,
-      ),
-    );
-  }
+  Widget _buildInitialView(BuildContext context, String msg) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  InitialView(BuildContext context, String msg) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(
-          height: smallPadding,
+        _buildSearchField(),
+        const SizedBox(height: 48),
+        Icon(
+          Icons.search,
+          size: 80,
+          color: isDark
+              ? secondaryTextDark.withOpacity(0.3)
+              : secondaryTextLight.withOpacity(0.3),
         ),
-        SearchFormField(),
-        const SizedBox(
-          height: largePadding,
-        ),
+        const SizedBox(height: 24),
         Text(
           msg,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
-        Flexible(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              margin: const EdgeInsets.all(largePadding),
-              child: SvgPicture.asset(
-                'assets/images/search.svg',
-                semanticsLabel:
-                    'Empty', /*height: MediaQuery.of(context).size.height * 0.5*/
-              ),
-            ),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: isDark ? primaryTextDark : primaryTextLight,
           ),
         ),
       ],

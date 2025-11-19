@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +12,7 @@ import '../../models/user.dart';
 import '../../shared/shared.dart';
 
 class RegisterController extends GetxController {
-  var pickedImageObs = Rxn<File?>();
+  var pickedImageObs = Rxn<XFile?>();
   var isPasswordVisible = false.obs;
   var downloadState = DownloadState.INITIAL.obs;
 
@@ -38,6 +36,12 @@ class RegisterController extends GetxController {
     required String password,
     String? imageUrl,
   }) async {
+    // Ensure a profile image is selected
+    if (pickedImageObs.value == null) {
+      mainController
+          .errorDialog('Please select a profile picture before registering.');
+      return;
+    }
     downloadState.value = DownloadState.LOADING;
 
     try {
@@ -88,17 +92,17 @@ class RegisterController extends GetxController {
     );
 
     if (pickedFile != null) {
-      pickedImageObs.value = File(pickedFile.path);
+      pickedImageObs.value = pickedFile;
     }
   }
 
   Future<TaskSnapshot> uploadImage(String? email) async {
     //upload image to firebase storage
+    final bytes = await pickedImageObs.value!.readAsBytes();
     return await storage
         .ref()
-        .child(
-            'users/${Uri.file(pickedImageObs.value!.path).pathSegments.last}')
-        .putFile(pickedImageObs.value!);
+        .child('users/${pickedImageObs.value!.name}')
+        .putData(bytes);
   }
 
   Future<String> getImageDownloadURL(TaskSnapshot imageSnapshot) async {

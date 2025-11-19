@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:realtime_quizzes/models/game.dart';
 import 'package:realtime_quizzes/screens/games/games_controller.dart';
 
@@ -9,6 +8,7 @@ import '../../main_controller.dart';
 import '../../models/download_state.dart';
 import '../../models/user.dart';
 import '../../shared/components.dart';
+import '../../shared/modern_ui.dart';
 import '../crate_game/create_game.dart';
 
 class GamesScreen extends StatelessWidget {
@@ -19,163 +19,168 @@ class GamesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Obx(() {
-        return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            child: Icon(
-              Icons.add,
-              color: bgColor,
-            ),
-            backgroundColor: darkBg,
-            onPressed: () {
-              Get.to(() => CreateGameScreen());
-            },
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return ModernScaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(() => CreateGameScreen());
+        },
+        backgroundColor: primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
+        elevation: 4,
+      ),
+      body: Obx(() {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              ModernHeader(
+                title: gamesController.downloadStateObs.value ==
+                        DownloadState.EMPTY
+                    ? ''
+                    : 'games'.tr,
+                subtitle: gamesController.downloadStateObs.value ==
+                        DownloadState.EMPTY
+                    ? ''
+                    : 'join_game_to_start'.tr,
+              ),
+              const SizedBox(height: 24),
+
               gamesController.downloadStateObs.value == DownloadState.LOADING
-                  ? LoadingView()
+                  ? _buildLoadingView()
                   : gamesController.downloadStateObs.value ==
                           DownloadState.EMPTY
-                      ? EmptyView(context)
+                      ? _buildEmptyView(context)
                       : gamesController.downloadStateObs.value ==
                               DownloadState.ERROR
-                          ? ErrorView(context)
-                          : AvailableGamesView(context: context),
-              gamesController.downloadStateObs.value == DownloadState.EMPTY ||
-                      gamesController.downloadStateObs.value ==
-                          DownloadState.LOADING
-                  ? const SizedBox()
-                  : HintTextView(),
+                          ? _buildErrorView(context)
+                          : _buildAvailableGamesView(context),
+
+              const SizedBox(height: 80), // Space for FAB
             ],
           ),
-
-          // This trailing comma makes auto-formatting nicer for build methods.
         );
       }),
     );
   }
 
-  Padding HintTextView() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, bottom: 24.0),
-      child: Card(
-        color: Colors.yellow[200],
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Text('Hint: Tap on a game to join it.',
-              style: TextStyle(color: darkBg, fontSize: 20)),
-        ),
-      ),
-    );
-  }
-
-  Widget AvailableGamesView({required BuildContext context}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Friends games',
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(fontSize: 24),
-          ),
-          gamesController.friendsGamesObs.value.isEmpty
-              ? Text(
-                  'No Friends games available',
-                  style: Theme.of(context).textTheme.titleMedium,
-                )
-              : AvailableGamesList(
-                  context: context,
-                  gamesList: gamesController.friendsGamesObs.value),
-          Text(
-            'Other games',
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(fontSize: 24),
-          ),
-          gamesController.availableGamesObs.value.isEmpty
-              ? Text(
-                  'No Other games available',
-                  style: Theme.of(context).textTheme.titleMedium,
-                )
-              : AvailableGamesList(
-                  context: context,
-                  gamesList: gamesController.availableGamesObs.value),
+  Widget _buildAvailableGamesView(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (gamesController.friendsGamesObs.value.isNotEmpty) ...[
+          ModernSectionTitle(title: 'friends_games'.tr),
+          const SizedBox(height: 12),
+          _buildGamesList(context, gamesController.friendsGamesObs.value),
+          const SizedBox(height: 24),
         ],
-      ),
+        ModernSectionTitle(title: 'other_games'.tr),
+        const SizedBox(height: 12),
+        gamesController.availableGamesObs.value.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  'no_other_games'.tr,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? secondaryTextDark
+                        : secondaryTextLight,
+                  ),
+                ),
+              )
+            : _buildGamesList(context, gamesController.availableGamesObs.value),
+      ],
     );
   }
 
-  Widget AvailableGamesList(
-      {required BuildContext context, required gamesList}) {
-    return ListView.builder(
+  Widget _buildGamesList(BuildContext context, List<dynamic> gamesList) {
+    return ListView.separated(
       shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return AvailableGameListItem(
-            context, index, gamesList.elementAt(index));
-      },
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: gamesList.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        return _buildGameItem(context, gamesList[index]);
+      },
     );
   }
 
-  Widget AvailableGameListItem(
-    BuildContext context,
-    int index,
-    game,
-  ) {
-    UserModel? availableGameCreator = game?.players
+  Widget _buildGameItem(BuildContext context, GameModel game) {
+    UserModel? creator = game.players
         ?.firstWhere((player) => player?.user?.email == game.gameId)
         ?.user;
 
-    return AvailableGameByOthersView(availableGameCreator, context, game);
-  }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  Widget AvailableGameByOthersView(UserModel? availableGameCreator,
-      BuildContext context, GameModel? availableGame) {
-    return CircleBorderContainer(
+    return ModernContentCard(
+      padding: EdgeInsets.zero,
       child: InkWell(
         onTap: () {
-          mainController.joinGame(availableGame);
+          mainController.joinGame(game);
         },
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width - 6 * smallPadding - 70,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
             children: [
-              Row(
-                children: [
-                  DefaultCircularNetworkImage(
-                    imageUrl: availableGameCreator?.imageUrl,
-                  ),
-                  const SizedBox(
-                    width: smallPadding,
-                  ),
-                  Text(
-                    '${formatTimeAgo(availableGame?.gameSettings?.createdAt)}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: lightText,
-                          fontSize: 14,
-                        ),
-                  ),
-                ],
+              DefaultCircularNetworkImage(
+                imageUrl: creator?.imageUrl,
+                width: 50,
+                height: 50,
               ),
-              Wrap(
-                children: [
-                  ...[
-                    '${availableGame?.gameSettings?.difficulty}',
-                    '${availableGame?.gameSettings?.category}',
-                    '${availableGame?.gameSettings?.numberOfQuestions?.toInt() ?? 10} Questions',
-                  ].map((text) {
-                    return CustomChip(label: text);
-                  }),
-                ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          creator?.name ?? 'Unknown',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? primaryTextDark : primaryTextLight,
+                          ),
+                        ),
+                        Text(
+                          formatTimeAgo(game.gameSettings?.createdAt),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                isDark ? secondaryTextDark : secondaryTextLight,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildInfoChip(
+                          '${game.gameSettings?.difficulty}',
+                          _getDifficultyColor(game.gameSettings?.difficulty),
+                        ),
+                        _buildInfoChip(
+                          '${game.gameSettings?.category}',
+                          primaryColor,
+                        ),
+                        _buildInfoChip(
+                          '${game.gameSettings?.numberOfQuestions?.toInt() ?? 10} Qs',
+                          Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: isDark ? secondaryTextDark : secondaryTextLight,
               ),
             ],
           ),
@@ -184,28 +189,86 @@ class GamesScreen extends StatelessWidget {
     );
   }
 
-  LoadingView() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  EmptyView(BuildContext context) {
-    return Expanded(
-      child: Center(
-        child: Text(
-          'No games available',
-          style: Theme.of(context).textTheme.displayLarge,
+  Widget _buildInfoChip(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withOpacity(0.5), width: 1),
+      ),
+      child: Text(
+        label.capitalize ?? label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: color,
         ),
       ),
     );
   }
 
-  ErrorView(BuildContext context) {
+  Color _getDifficultyColor(String? difficulty) {
+    switch (difficulty?.toLowerCase()) {
+      case 'easy':
+        return Colors.green;
+      case 'medium':
+        return Colors.orange;
+      case 'hard':
+        return Colors.red;
+      default:
+        return primaryColor;
+    }
+  }
+
+  Widget _buildLoadingView() {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.0),
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildEmptyView(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 48.0),
+        child: Column(
+          children: [
+            Icon(
+              Icons.games_outlined,
+              size: 64,
+              color: isDark ? secondaryTextDark : secondaryTextLight,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'no_games_available'.tr,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: isDark ? primaryTextDark : primaryTextLight,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'create_new_game'.tr,
+              style: TextStyle(
+                color: isDark ? secondaryTextDark : secondaryTextLight,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorView(BuildContext context) {
     return Center(
       child: Text(
         'Something went wrong.',
-        style: Theme.of(context).textTheme.displayLarge,
+        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }

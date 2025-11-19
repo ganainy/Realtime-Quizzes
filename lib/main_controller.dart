@@ -53,15 +53,36 @@ class MainController extends GetxController {
 
   /// ******************************* Logged User ****************************/
 
+  Timer? _debounceTimer;
+
   //set user status to online or offline
   void changeUserStatus(bool isOnline) {
+    // Cancel any pending timer
+    _debounceTimer?.cancel();
+
+    if (isOnline) {
+      // If coming online, update immediately
+      _updateStatus(true);
+    } else {
+      // If going offline, wait 5 seconds before updating
+      _debounceTimer = Timer(const Duration(seconds: 5), () {
+        _updateStatus(false);
+      });
+    }
+  }
+
+  void _updateStatus(bool isOnline) {
     //set user as online and offline based on if using app or not
-    usersCollection.doc(Shared.loggedUser?.email).update({
-      'isOnline': isOnline,
-    }).then((value) {
-      debugPrint('update status success');
-      isOnlineObs.value = isOnline;
-    });
+    if (Shared.loggedUser?.email != null) {
+      usersCollection.doc(Shared.loggedUser?.email).update({
+        'isOnline': isOnline,
+      }).then((value) {
+        debugPrint('update status success: $isOnline');
+        isOnlineObs.value = isOnline;
+      }).catchError((error) {
+        debugPrint('Failed to update status: $error');
+      });
+    }
   }
 
   //observe changes of logged user to update the profile

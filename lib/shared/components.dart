@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:realtime_quizzes/customization/theme.dart';
 import 'package:realtime_quizzes/screens/multiplayer_quiz/multiplayer_quiz_controller.dart';
@@ -210,12 +212,32 @@ DefaultCircularNetworkImage({
   double width = 70.0,
   double height = 70.0,
 }) {
-  return Container(
-      child: CircleAvatar(
-    radius: width / 2 + 3,
-    backgroundColor: Colors.blueGrey,
-    child: CachedNetworkImage(
-      imageUrl: imageUrl ?? DEFAULT_PLAYER_IMAGE_URL,
+  final url = (imageUrl == null || imageUrl.isEmpty)
+      ? DEFAULT_PLAYER_IMAGE_URL
+      : imageUrl;
+
+  Widget imageWidget;
+
+  if (kIsWeb) {
+    imageWidget = Image.network(
+      url,
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => Image.asset(
+        'assets/images/user.png',
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      ),
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  } else if (url.startsWith('http')) {
+    imageWidget = CachedNetworkImage(
+      imageUrl: url,
       imageBuilder: (context, imageProvider) => Container(
         width: width,
         height: height,
@@ -224,10 +246,55 @@ DefaultCircularNetworkImage({
           image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
         ),
       ),
-      placeholder: (context, url) => CircularProgressIndicator(),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      placeholder: (context, url) =>
+          const Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => Image.asset(
+        'assets/images/user.png',
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      ),
+    );
+  } else {
+    imageWidget = Image.file(
+      File(url),
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => Image.asset(
+        'assets/images/user.png',
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  // For CachedNetworkImage, it handles its own shape via imageBuilder.
+  // For others, we need to clip.
+  if (!kIsWeb && url.startsWith('http')) {
+    return Container(
+      child: CircleAvatar(
+        radius: width / 2 + 3,
+        backgroundColor: Colors.blueGrey,
+        child: imageWidget,
+      ),
+    );
+  }
+
+  return Container(
+    child: CircleAvatar(
+      radius: width / 2 + 3,
+      backgroundColor: Colors.blueGrey,
+      child: ClipOval(
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: imageWidget,
+        ),
+      ),
     ),
-  ));
+  );
 }
 
 //show if user online or offline

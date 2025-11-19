@@ -1,137 +1,134 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:realtime_quizzes/screens/login/login_controller.dart';
 
+import '../../customization/theme.dart';
 import '../../models/download_state.dart';
-import '../../shared/components.dart';
+import '../../shared/modern_ui.dart';
 import '../register/register.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   final LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Obx(() {
-        return Scaffold(
-          body: Form(
-            key: _formKey,
-            child: Center(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'LOGIN ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontSize: 32),
-                      ),
-                      Text(
-                        'Login to access your challenges and statistics ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: Colors.grey),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      DefaultFormField(
-                        labelText: 'Email address',
-                        controller: emailController,
-                        prefixIcon: const Icon(Icons.email),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value.toString().isEmpty) {
-                            return 'Please enter Email address';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      DefaultFormField(
-                        labelText: 'Password',
-                        controller: passwordController,
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            loginController.changePasswordVisibility();
-                          },
-                          icon: loginController.isPasswordVisible.value
-                              ? const Icon(Icons.visibility_off)
-                              : const Icon(Icons.visibility),
-                        ),
-                        obscureText: !loginController.isPasswordVisible.value,
-                        validator: (value) {
-                          if (value.toString().isEmpty) {
-                            return 'Please enter password';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      loginController.downloadState.value ==
-                              DownloadState.LOADING
-                          ? DefaultButton(isLoading: true)
-                          : DefaultButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  loginController.login(
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  );
-                                }
-                              },
-                              text: 'login'),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Don\'t have an account? ',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Get.off(
-                                () => RegisterScreen(),
-                              );
-                            },
-                            child: const Text(
-                              'Register',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return ModernScaffold(
+      body: Obx(() {
+        return Form(
+          key: _formKey,
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Header
+                  const ModernHeader(
+                    title: 'Login',
+                    subtitle: 'Login to access your challenges and statistics',
                   ),
-                ),
+                  const SizedBox(height: 48),
+
+                  // Email Field
+                  ModernTextField(
+                    controller: emailController,
+                    hintText: 'Email address',
+                    icon: Icons.mail_outline,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return 'Please enter Email address';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Password Field
+                  ModernTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    icon: Icons.lock_outline,
+                    isPassword: true,
+                    isPasswordVisible: loginController.isPasswordVisible.value,
+                    onVisibilityChanged: () {
+                      loginController.changePasswordVisibility();
+                    },
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return 'Please enter password';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Login Button
+                  ModernButton(
+                    text: 'Login',
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        loginController.login(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                      }
+                    },
+                    isLoading: loginController.downloadState.value ==
+                        DownloadState.LOADING,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Register Link
+                  _buildRegisterLink(context, isDark),
+                ],
               ),
             ),
           ),
-          // This trailing comma makes auto-formatting nicer for build methods.
         );
       }),
+    );
+  }
+
+  Widget _buildRegisterLink(BuildContext context, bool isDark) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Don\'t have an account? ',
+          style: TextStyle(
+            fontSize: 14,
+            color: isDark ? secondaryTextDark : secondaryTextLight,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.off(() => RegisterScreen());
+          },
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(0, 0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: const Text(
+            'Register',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: primaryColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

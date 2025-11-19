@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:realtime_quizzes/screens/register/register.dart';
+import 'package:realtime_quizzes/models/user.dart';
+import 'package:realtime_quizzes/screens/login/login.dart';
+
 import 'package:realtime_quizzes/shared/constants.dart';
 import 'package:realtime_quizzes/shared/shared.dart';
 
@@ -13,46 +16,56 @@ import 'network/dio_helper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DioHelper.init();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  Get.put(MainController());
-  late Widget startWidget;
 
-  //navigate to games or register based on auth state
-  if (auth.currentUser != null) {
-    startWidget = HomeScreen();
-  } else {
-    startWidget = RegisterScreen();
+  try {
+    await DioHelper.init();
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    Get.put(MainController());
+  } catch (e) {
+    debugPrint('Initialization error: $e');
   }
 
-  runApp(MyApp(startWidget));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  final Widget startWidget;
-
-  const MyApp(this.startWidget, {Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final MainController mainController = Get.find<MainController>();
+  MainController? mainController;
+
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    try {
+      mainController = Get.find<MainController>();
+    } catch (e) {
+      debugPrint('MainController not found: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (mainController == null) return;
+
     if (state == AppLifecycleState.resumed) {
-      mainController.changeUserStatus(true);
+      mainController!.changeUserStatus(true);
       debugPrint('user online ');
     } else {
       debugPrint('user offline  ${state.toString()}');
-      mainController.changeUserStatus(false);
+      mainController!.changeUserStatus(false);
     }
   }
 
@@ -64,7 +77,70 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       locale: const Locale('en', 'US'),
       translationsKeys: Constants.translation,
       theme: MyTheme.lighTheme,
-      home: widget.startWidget,
+      darkTheme: MyTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          // Show loading while checking auth state
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Loading...',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // Handle errors
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline,
+                        size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Error: ${snapshot.error}'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          // User is logged in
+          if (snapshot.hasData && snapshot.data != null) {
+            Shared.loggedUser = UserModel(email: snapshot.data!.email);
+            Future.delayed(Duration.zero, () {
+              mainController?.changeUserStatus(true);
+            });
+            return HomeScreen();
+          }
+
+          // User is not logged in
+          return LoginScreen();
+        },
+      ),
     );
   }
 }

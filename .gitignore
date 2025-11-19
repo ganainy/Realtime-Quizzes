@@ -44,3 +44,21 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android Secrets & Config
+**/android/local.properties
+**/android/key.properties
+**/android/*.jks
+**/android/*.keystore
+
+# iOS Generated & Config
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+
+# Firebase & Sensitive Data
+# Exclude Firebase configuration files to prevent leaking project IDs and API keys
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
