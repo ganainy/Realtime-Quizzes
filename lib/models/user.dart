@@ -43,12 +43,17 @@ userModelToJson(UserModel? userModel) {
     connectionsJson.add(connectionToJson(connection));
   });
 
-  return {
-    'name': userModel?.name,
+  Map<String, dynamic> json = {
     'email': userModel?.email,
     'imageUrl': userModel?.imageUrl,
     'isOnline': userModel?.isOnline,
     'results': resultsJson,
     'connections': connectionsJson,
   };
+
+  if (userModel?.name != null && userModel!.name.isNotEmpty) {
+    json['name'] = userModel.name;
+  }
+
+  return json;
 }

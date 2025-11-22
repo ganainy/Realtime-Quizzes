@@ -180,6 +180,8 @@ class MainController extends GetxController {
         .doc(Shared.loggedUser?.email)
         .snapshots()
         .listen((queueEntryJson) {
+      if (queueEntryJson.data() == null) return;
+
       Shared.game = GameModel.fromJson(queueEntryJson.data());
 
       if (Shared.game.gameStatus == GameStatus.INVITE_ACCEPTED &&
@@ -372,6 +374,50 @@ class MainController extends GetxController {
     }).onError((error, stackTrace) {
       errorDialog(error.toString());
       printError(info: "Failed to removeFriendRequest: $error");
+    });
+  }
+
+  void cancelFriendRequest(UserModel? friendSuggestion) {
+    //remove other user from logged user sent friends requests
+    Connection? loggedUserConnection =
+        Shared.loggedUser?.connections.firstWhere((connection) {
+      return connection?.email == friendSuggestion?.email;
+    }, orElse: () => null);
+
+    if (loggedUserConnection != null) {
+      Shared.loggedUser?.connections.remove(loggedUserConnection);
+    }
+
+    //update logged user
+    usersCollection
+        .doc(Shared.loggedUser?.email)
+        .set(userModelToJson(Shared.loggedUser))
+        .then((value) {
+      debugPrint("1 CANCEL_FRIEND_REQUEST ");
+    }).onError((error, stackTrace) {
+      printError(info: "1 Failed CANCEL_FRIEND_REQUEST: $error");
+      errorDialog(error.toString());
+    });
+
+    //remove logged user from other user received friends requests
+    Connection? otherUserConnection =
+        friendSuggestion?.connections.firstWhere((connection) {
+      return connection?.email == Shared.loggedUser?.email;
+    }, orElse: () => null);
+
+    if (otherUserConnection != null) {
+      friendSuggestion?.connections.remove(otherUserConnection);
+    }
+
+    //update other user
+    usersCollection
+        .doc(friendSuggestion?.email)
+        .set(userModelToJson(friendSuggestion))
+        .then((value) {
+      debugPrint("2 CANCEL_FRIEND_REQUEST ");
+    }).onError((error, stackTrace) {
+      errorDialog(error.toString());
+      printError(info: "2 Failed CANCEL_FRIEND_REQUEST: $error");
     });
   }
 

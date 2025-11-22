@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../layouts/home/home.dart';
 import '../../main_controller.dart';
 import '../../models/download_state.dart';
 import '../../models/user.dart';
@@ -60,8 +59,8 @@ class RegisterController extends GetxController {
         await updateUserImageUrl(email, downloadUrl);
       }
 
-      downloadState.value = DownloadState.SUCCESS;
-      Get.to(() => HomeScreen());
+      downloadState.value = DownloadState.INITIAL;
+      // Navigation is handled by the StreamBuilder in main.dart
     } on FirebaseAuthException catch (e) {
       downloadState.value = DownloadState.INITIAL;
 

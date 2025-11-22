@@ -12,6 +12,8 @@ class GamesController extends GetxController {
   var availableGamesObs = [].obs; // list of gameModel by strangers
   var friendsGamesObs = [].obs; // list of gameModel by friends
 
+  var createdGameObs = Rxn<GameModel>();
+
   late MainController mainController;
   @override
   void onInit() {
@@ -25,6 +27,8 @@ class GamesController extends GetxController {
 
     downloadStateObs.value = DownloadState.LOADING;
     gameCollection.snapshots().listen((event) {
+      createdGameObs.value = null; // Reset created game
+
       if (event.docs.isEmpty) {
         downloadStateObs.value = DownloadState.EMPTY;
         return;
@@ -36,8 +40,13 @@ class GamesController extends GetxController {
       for (var gameJson in event.docs) {
         var game = GameModel.fromJson(gameJson.data());
 
-        // dont show the game that is created by the logged user
-        if (game.gameId != Shared.loggedUser?.email) {
+        // Check if this is the user's created game
+        if (game.gameId == Shared.loggedUser?.email) {
+          if (game.gameStatus == GameStatus.ACTIVE) {
+            createdGameObs.value = game;
+          }
+        } else {
+          // Not user's game, add to available games
           tempAvailableGames.add(game);
 
           if (game.gameStatus == GameStatus.ACTIVE && !isShowedGame(game)) {
@@ -71,11 +80,13 @@ class GamesController extends GetxController {
           friendsGamesObs.value.add(availableGame);
           friendsGamesObs.refresh();
         }
+      }
 
-        if (availableGamesObs.value.isEmpty && friendsGamesObs.value.isEmpty) {
-          //there is only one game and its created by logged user so dont show
-          downloadStateObs.value = DownloadState.EMPTY;
-        }
+      if (availableGamesObs.value.isEmpty &&
+          friendsGamesObs.value.isEmpty &&
+          createdGameObs.value == null) {
+        //there is only one game and its created by logged user so dont show
+        downloadStateObs.value = DownloadState.EMPTY;
       }
     }).onError((error, stackTrace) {
       mainController.errorDialog('Error loading games: ' + error.toString());
@@ -93,5 +104,20 @@ class GamesController extends GetxController {
       }
     }
     return isShowed;
+  }
+
+  void cancelCreatedGame() {
+    if (createdGameObs.value != null) {
+      mainController.loadingDialog(loadingMessage: 'Canceling game...');
+      gameCollection.doc(createdGameObs.value!.gameId).delete().then((value) {
+        mainController.hideCurrentDialog();
+        createdGameObs.value = null;
+        // Refresh the list to ensure UI updates
+        loadAvailableGames();
+      }).catchError((error) {
+        mainController.hideCurrentDialog();
+        mainController.errorDialog('Failed to cancel game: $error');
+      });
+    }
   }
 }

@@ -134,7 +134,7 @@ class FriendsScreen extends StatelessWidget {
           SizedBox(
             width: 64,
             child: Text(
-              friend.name ?? 'Friend',
+              (friend.name?.isEmpty ?? true) ? 'Friend' : friend.name!,
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -186,7 +186,7 @@ class FriendsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  request.name ?? 'User',
+                  (request.name?.isEmpty ?? true) ? 'User' : request.name!,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

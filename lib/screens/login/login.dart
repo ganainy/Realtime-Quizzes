@@ -6,6 +6,7 @@ import '../../customization/theme.dart';
 import '../../models/download_state.dart';
 import '../../shared/modern_ui.dart';
 import '../register/register.dart';
+import '../reset_password/reset_password_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -69,6 +70,23 @@ class LoginScreen extends StatelessWidget {
                       }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.to(() => const ResetPasswordScreen());
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color:
+                              isDark ? secondaryTextDark : secondaryTextLight,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 24),
 

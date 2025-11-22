@@ -54,9 +54,24 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                     DefaultCircularNetworkImage(
                         imageUrl: multiPlayerQuizController
                             .loggedPlayer?.user?.imageUrl),
+                    const SizedBox(height: 8),
                     Text(
-                        '${multiPlayerQuizController.loggedPlayer?.user?.name} '),
-                    Text('${multiPlayerQuizController.loggedPlayer?.score} '),
+                      (multiPlayerQuizController
+                                  .loggedPlayer?.user?.name?.isEmpty ??
+                              true)
+                          ? 'Unknown'
+                          : multiPlayerQuizController.loggedPlayer!.user!.name!,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${multiPlayerQuizController.loggedPlayer?.score} ',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                    ),
                   ],
                 ),
                 Column(
@@ -64,7 +79,7 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                     Icon(
                       Icons.access_alarm,
                       size: 40,
-                      color: darkText,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     Text(
                       multiPlayerQuizController.timerValueObs.value.toString(),
@@ -72,7 +87,10 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                           color:
                               multiPlayerQuizController.timerValueObs.value <= 3
                                   ? Colors.red
-                                  : darkText),
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.color),
                     ),
                   ],
                 ),
@@ -81,8 +99,24 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                     DefaultCircularNetworkImage(
                         imageUrl:
                             multiPlayerQuizController.opponent?.user?.imageUrl),
-                    Text('${multiPlayerQuizController.opponent?.user?.name} '),
-                    Text('${multiPlayerQuizController.opponent?.score} '),
+                    const SizedBox(height: 8),
+                    Text(
+                      (multiPlayerQuizController
+                                  .opponent?.user?.name?.isEmpty ??
+                              true)
+                          ? 'Unknown'
+                          : multiPlayerQuizController.opponent!.user!.name!,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${multiPlayerQuizController.opponent?.score} ',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -92,25 +126,51 @@ class MultiPlayerQuizScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(smallPadding),
                   child: Card(
-                    color: Colors.yellow[200],
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF334155) // Darker slate for dark mode
+                        : Colors.yellow[200],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Container(
                         width: double.infinity,
                         margin: EdgeInsets.all(largePadding),
                         child: Text(
                           '${currentQuestion?.question}',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         )),
                   ),
                 ),
                 Align(
                   alignment: Alignment.topCenter,
                   child: Card(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF1E293B)
+                        : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     child: Container(
-                      margin: EdgeInsets.all(4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: Text(
-                          'Question: ${(multiPlayerQuizController.currentQuestionIndexObs.value + 1)}'
-                          '/${(multiPlayerQuizController.gameObs.value?.questions?.length)}'),
+                        'Question: ${(multiPlayerQuizController.currentQuestionIndexObs.value + 1)}'
+                        '/${(multiPlayerQuizController.gameObs.value?.questions?.length)}',
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white70
+                              : Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                 ),

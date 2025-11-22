@@ -1,29 +1,59 @@
 # Realtime Quizzes
-Flutter app to challenge other players in realtime quizess using Firebase and Trivia API.
 
-Video Preview:<br>
-----------
-<img src="https://user-images.githubusercontent.com/44480226/169395956-e7dbf7da-2fe2-4437-ac14-a75e95e768f3.gif" width="400" height="400" />
-<img src="https://user-images.githubusercontent.com/44480226/169395952-2460aaa0-a265-4574-82dd-49d04fafe5bb.gif" width="200" height="400" />           
+Challenge other players in realtime quizzes! This Flutter application allows users to compete in online games against other players and offline games, manage friends, and track their progress.
 
+## App Preview
 
-Features:<br>
-----------
-Register and login <br><br>
-<img src="https://user-images.githubusercontent.com/44480226/164798407-8f47aefb-0869-4b64-aa4c-68005a084f3e.png" width="200" height="400" />
+|   |   |   |
+|---|---|---|
+| <img src="app_preview/Screenshot_2025-11-22-18-35-25-317_com.example.realtime_quizzes.jpg" width="200" /> | <img src="app_preview/Screenshot_2025-11-22-21-28-33-109_com.example.realtime_quizzes.jpg" width="200" /> | <img src="app_preview/Screenshot_2025-11-22-21-45-38-403_com.example.realtime_quizzes.jpg" width="200" /> |
+| <img src="app_preview/Screenshot_2025-11-22-22-06-05-486_com.example.realtime_quizzes.jpg" width="200" /> | <img src="app_preview/Screenshot_2025-11-22-22-08-11-253_com.example.realtime_quizzes.jpg" width="200" /> | <img src="app_preview/Screenshot_2025-11-22-22-08-39-389_com.example.realtime_quizzes.jpg" width="200" /> |
+| <img src="app_preview/Screenshot_2025-11-22-22-08-46-866_com.example.realtime_quizzes.jpg" width="200" /> | <img src="app_preview/Screenshot_2025-11-22-22-10-05-027_com.example.realtime_quizzes.jpg" width="200" /> | |
 
-Customize game category, length and difficulty <br><br>
-<img src="https://user-images.githubusercontent.com/44480226/169396688-e4f44fd0-7313-4f1f-994c-d6c099b6cca7.png" width="200" height="400" />
+## Features
 
-Search for, add and challenge friends<br><br>
-<img src="https://user-images.githubusercontent.com/44480226/169396781-5fcf10cc-937a-4321-85be-89e517a5289e.png" width="200" height="400" />
-<img src="https://user-images.githubusercontent.com/44480226/169396702-48d4a11c-fcb1-4334-bc83-3487d6e5d38d.png" width="200" height="400" />
-<img src="https://user-images.githubusercontent.com/44480226/169396720-9a81a833-e98d-4102-999c-ffa20bd1c489.png" width="200" height="400" />
-<img src="https://user-images.githubusercontent.com/44480226/169397029-220703ee-3929-4292-b0bf-119939d4888d.png" width="200" height="400" />
+- **Authentication**: Secure Login, Registration, and Password Reset functionality.
+- **Realtime Multiplayer**: Create games and challenge friends or other users in real-time.
+- **Single Player Mode**: Practice and test your knowledge with single-player quizzes.
+- **Friends System**: Search for users, send friend requests, and manage your friends list.
+- **Profile Management**: View and update your profile.
+- **Leaderboards & Results**: Track your scores and compare with others.
 
+## Tech Stack
 
-Answers and scores realtime update <br><br>
-<img src="https://user-images.githubusercontent.com/44480226/164798689-02bd21f5-d9c9-427b-95a7-63c6cdaa69bd.png" width="200" height="400" />
+- **Framework**: [Flutter](https://flutter.dev/)
+- **State Management**: [GetX](https://pub.dev/packages/get)
+- **Backend**: Firebase (Auth, Firestore, Storage)
+- **Networking**: Dio
+- **UI Components**: 
+  - Syncfusion Flutter Sliders
+  - Shimmer
+  - Flutter SVG
+  - Badges
 
-See game history in your profile <br><br>
-<img src="https://user-images.githubusercontent.com/44480226/169396989-2bbb4916-6a9b-4b20-a68e-bcdba809c6be.png" width="200" height="400" />
+## Getting Started
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/yourusername/realtime_quizzes.git
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    flutter pub get
+    ```
+
+3.  **Environment Configuration:**
+    - Create a `.env` file in the root directory with your API keys:
+      ```
+      TRIVIA_API_KEY=your_api_key_here
+      ```
+
+4.  **Firebase Setup:**
+    - Ensure you have a `google-services.json` file in `android/app/` for Android.
+    - Ensure you have a `GoogleService-Info.plist` in `ios/Runner/` for iOS.
+
+5.  **Run the app:**
+    ```bash
+    flutter run
+    ```

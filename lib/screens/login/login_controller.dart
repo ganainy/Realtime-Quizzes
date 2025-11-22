@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../layouts/home/home.dart';
 import '../../main_controller.dart';
 import '../../models/download_state.dart';
 import '../../models/user.dart';
@@ -39,7 +38,8 @@ class LoginController extends GetxController {
       //user logged successfully, save user info
       Shared.loggedUser = UserModel(email: auth.currentUser?.email);
       debugPrint('Login email : ${auth.currentUser?.email}');
-      Get.off(() => HomeScreen());
+      downloadState.value = DownloadState.INITIAL;
+      // Navigation is handled by the StreamBuilder in main.dart
     } on FirebaseAuthException catch (e) {
       downloadState.value = DownloadState.INITIAL;
 

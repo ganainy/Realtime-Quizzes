@@ -102,9 +102,7 @@ class GameSearchController extends GetxController {
     } else if (status == UserStatus.RECEIVED_FRIEND_REQUEST) {
       mainController.acceptFriendRequest(user);
     } else if (status == UserStatus.SENT_FRIEND_REQUEST) {
-      mainController.errorDialog(
-        'friend_request_sent_already'.tr,
-      );
+      mainController.cancelFriendRequest(user);
     } else if (status == UserStatus.NOT_FRIEND ||
         status == UserStatus.REMOVED_REQUEST) {
       mainController.sendFriendRequest(user);

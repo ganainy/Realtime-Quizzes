@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:realtime_quizzes/customization/theme.dart';
@@ -158,13 +159,17 @@ MultiPlayerAnswerButton({
           ),
           Text(
             text,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Colors
+                      .black87, // Always dark text on white/light colored buttons
+                  fontWeight: FontWeight.w600,
+                ),
           ),
         ],
       ),
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
-        foregroundColor: Colors.white,
+        // Remove foregroundColor as we are setting text color explicitly
       ),
     ),
   );
@@ -224,8 +229,8 @@ DefaultCircularNetworkImage({
       width: width,
       height: height,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => Image.asset(
-        'assets/images/user.png',
+      errorBuilder: (context, error, stackTrace) => SvgPicture.asset(
+        'assets/images/user.svg',
         width: width,
         height: height,
         fit: BoxFit.cover,
@@ -248,8 +253,8 @@ DefaultCircularNetworkImage({
       ),
       placeholder: (context, url) =>
           const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) => Image.asset(
-        'assets/images/user.png',
+      errorWidget: (context, url, error) => SvgPicture.asset(
+        'assets/images/user.svg',
         width: width,
         height: height,
         fit: BoxFit.cover,
@@ -261,8 +266,8 @@ DefaultCircularNetworkImage({
       width: width,
       height: height,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => Image.asset(
-        'assets/images/user.png',
+      errorBuilder: (context, error, stackTrace) => SvgPicture.asset(
+        'assets/images/user.svg',
         width: width,
         height: height,
         fit: BoxFit.cover,
